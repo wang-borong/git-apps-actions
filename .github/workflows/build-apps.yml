@@ -52,9 +52,9 @@ jobs:
 
       - name: Pack
         run: |
-          cd /
-          tar Jcf apps.tar.xz apps
-          echo "PACKAGE=/apps.tar.xz" >> $GITHUB_ENV
+          cd /apps
+          tar Jcf apps.tar.xz *
+          echo "PACKAGE=/apps/apps.tar.xz" >> $GITHUB_ENV
 
       - name: Upload package
         uses: actions/upload-artifact@master
