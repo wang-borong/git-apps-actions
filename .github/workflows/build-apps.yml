@@ -48,6 +48,7 @@ jobs:
           cargo build --release
           mkdir -p /apps/alacritty/bin
           cp target/release/alacritty /apps/alacritty/bin
+          strip /apps/alacritty/bin/alacritty
           cp -a extra/{alacritty.info,alacritty.man,completions,linux,logo} alacritty.yml /apps/alacritty
 
       - name: Pack
