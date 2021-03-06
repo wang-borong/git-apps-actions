@@ -5,7 +5,7 @@ on:
     branches: [ main ]
     paths: [ '.github/workflows/build-apps.yml' ]
   schedule:
-    - cron: 0 21 * * *
+    - cron: 0 22 * * *
   watch:
     types: started
 
@@ -41,7 +41,7 @@ jobs:
       - name: Building apps
         run: |
           cd ${BUILDDIR}
-          git clone -b ligature https://hub.fastgit.org/zenixls2/alacritty
+          git clone -b ligature https://github.com/zenixls2/alacritty
           cd alacritty
           cargo build --release
           mkdir -p /apps/alacritty/bin
