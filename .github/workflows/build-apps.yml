@@ -36,7 +36,8 @@ jobs:
           sudo mkdir -p /build && sudo chmod 777 /build
           echo "BUILDDIR=/build" >> $GITHUB_ENV
           # setup rust building environment
-          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs -o rustup-init.sh
+          sh rustup-init.sh -y
 
       - name: Building apps
         run: |
