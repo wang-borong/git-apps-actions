@@ -1,0 +1,86 @@
+name: Build x-tools
+
+on:
+  push:
+    branches: [ main ]
+    paths: [ '.github/workflows/build-apps.yml' ]
+  schedule:
+    - cron: 0 21 * * *
+  watch:
+    types: started
+
+env:
+  TZ: Asia/Shanghai
+
+
+# Action will return to the startup working directory every run
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    if: github.event.repository.owner.id == github.event.sender.id
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Initialization environment
+        run: |
+          sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /usr/local/lib/android /opt/ghc
+          sudo apt-get -qq update
+          sudo apt-get -qq autoremove --purge
+          sudo apt-get -qq clean
+          sudo timedatectl set-timezone "$TZ"
+
+      - name: Setup building environment
+        run: |
+          sudo mkdir -p /apps && sudo chmod 777 /apps
+          sudo mkdir -p /build && sudo chmod 777 /build
+          echo "BUILDDIR=/build" >> $GITHUB_ENV
+          # setup rust building environment
+          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+
+      - name: Building apps
+        run: |
+          cd ${BUILDDIR}
+          git clone -b ligature https://hub.fastgit.org/zenixls2/alacritty
+          cd alacritty
+          cargo build --release
+          mkdir -p /apps/alacritty/bin
+          cp target/release/alacritty /apps/alacritty/bin
+          cp extra/{alacritty.info,alacritty.man,completions,linux,logo} alacritty.yml /apps/alacritty
+
+      - name: Pack
+        run: |
+          cd /
+          tar Jcf apps.tar.xz apps
+          echo "PACKAGE=/apps.tar.xz" >> $GITHUB_ENV
+
+      - name: Upload package
+        uses: actions/upload-artifact@master
+        with:
+          name: apps
+          path: ${{env.PACKAGE}}
+
+      - name: Generate release tag
+        id: tag
+        run: |
+          echo "::set-output name=release_tag::$(date +"%Y.%m.%d")"
+          echo "::set-output name=status::success"
+
+      - name: Upload package to release
+        id: release
+        uses: softprops/action-gh-release@v1
+        if: steps.tag.outputs.status == 'success' && !cancelled()
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        with:
+          tag_name: ${{steps.tag.outputs.release_tag}}
+          body: "builded applications"
+          files: ${{env.PACKAGE}}
+          
+      - name: Remove old Releases
+        uses: dev-drprasad/delete-older-releases@v0.1.0
+        with:
+          keep_latest: 3
+          delete_tags: true
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
