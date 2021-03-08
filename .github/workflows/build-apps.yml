@@ -46,10 +46,23 @@ jobs:
           git clone -b ligature https://github.com/zenixls2/alacritty
           cd alacritty
           cargo build --release
-          mkdir -p /apps/alacritty/bin
-          cp target/release/alacritty /apps/alacritty/bin
-          strip /apps/alacritty/bin/alacritty
-          cp -a extra/{alacritty.info,alacritty.man,completions,linux,logo} alacritty.yml /apps/alacritty
+          git clone https://github.com/wbrn/git-apps-actions
+          cp target/release/alacritty git-apps-actions/package-components/alacritty/usr/bin
+          strip git-apps-actions/package-components/alacritty/usr/bin/alacritty
+
+          alacritty_md5sum=$(md5sum git-apps-actions/package-components/alacritty/usr/bin/alacritty | awk -F' ' '{print $1}')
+          sed -i "s/103606d444be34fd964b756aff8868ea/$alacritty_md5sum/" git-apps-actions/package-components/alacritty/DEBIAN/md5sums
+
+          alacri_ver=$(target/release/alacritty --version | awk -F' ' '{print $2}')
+          alacri_head=$(target/release/alacritty --version | sed 's/.*(\(.*\))/\1/')
+          timestamp=$(date +%s)
+          sed -i "/Version: /s/0.8.0/$alacri_ver/" git-apps-actions/package-components/alacritty/DEBIAN/control
+          sed -i "/Version: /s/3ed0430/$alacri_head/" git-apps-actions/package-components/alacritty/DEBIAN/control
+          sed -i "/Version: /s/1615046659/$timestamp/" git-apps-actions/package-components/alacritty/DEBIAN/control
+
+          sed -i "/Installed-Size: /s/5734/$(du -sk git-apps-actions/package-components/alacritty/usr/bin/alacritty | awk -F' ' '{print $1}')/" git-apps-actions/package-components/alacritty/DEBIAN/control
+
+          dpkg-deb -b git-apps-actions/package-components/alacritty /apps/alacritty_${alacri_ver}\~${timestamp}\~20.04\~${alacri_head}_amd64.deb
 
       - name: Pack
         run: |

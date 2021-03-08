@@ -1,0 +1,9 @@
+103606d444be34fd964b756aff8868ea  usr/bin/alacritty
+1e5f391abbc4ef469116664faaf70434  usr/share/applications/com.alacritty.Alacritty.desktop
+5af76b49f37ba94c73c7b81600e78c75  usr/share/bash-completion/completions/alacritty
+46d8e471a824ae55e4d6bd6f066dfb6e  usr/share/doc/alacritty/changelog.gz
+a067a2e4c67d5d3c26493ddbb1c599b5  usr/share/doc/alacritty/copyright
+2cc9a81f86a0d33a823083d1790e869e  usr/share/fish/completions/alacritty.fish
+267ddc8359a5b7baca6277265d0eb1da  usr/share/man/man1/alacritty.1.gz
+ef4f9d3396c571578b268fd2e6092591  usr/share/pixmaps/com.alacritty.Alacritty.svg
+22ca184c0b150b3b778329c66c870260  usr/share/zsh/vendor-completions/_alacritty

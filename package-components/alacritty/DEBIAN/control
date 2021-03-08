@@ -1,0 +1,12 @@
+Package: alacritty-wbr
+Version: 0.8.0~1615046659~20.04~3ed0430
+Architecture: amd64
+Maintainer: Jason Wang <wang_borong@163.com>
+Installed-Size: 5734
+Depends: libc6 (>= 2.29), libfontconfig1 (>= 2.12.6), libfreetype6 (>= 2.8), libgcc-s1 (>= 4.2), libxcb1 (>= 1.6)
+Recommends: xclip
+Section: rust
+Priority: optional
+Homepage: https://github.com/zenixls2/alacritty
+Description: GPU-accelerated terminal emulator
+ GPU-accelerated terminal emulator, written in Rust
