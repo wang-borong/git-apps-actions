@@ -47,6 +47,7 @@ jobs:
           cd alacritty
           cargo build --release
           git clone https://github.com/wbrn/git-apps-actions
+          mkdir -p git-apps-actions/package-components/alacritty/usr/bin
           cp target/release/alacritty git-apps-actions/package-components/alacritty/usr/bin
           strip git-apps-actions/package-components/alacritty/usr/bin/alacritty
 
