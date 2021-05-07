@@ -1,4 +1,4 @@
-name: Build x-tools
+name: Build deb apps
 
 on:
   push:
