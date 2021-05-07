@@ -65,17 +65,7 @@ jobs:
 
           dpkg-deb -b git-apps-actions/package-components/alacritty /apps/alacritty_${alacri_ver}\~${timestamp}\~20.04\~${alacri_head}_amd64.deb
 
-      - name: Pack
-        run: |
-          cd /apps
-          tar Jcf apps.tar.xz *
-          echo "PACKAGE=/apps/apps.tar.xz" >> $GITHUB_ENV
-
-      - name: Upload package
-        uses: actions/upload-artifact@master
-        with:
-          name: apps
-          path: ${{env.PACKAGE}}
+          echo "ALACRITTY=/apps/alacritty_${alacri_ver}\~${timestamp}\~20.04\~${alacri_head}_amd64.deb" >> $GITHUB_ENV
 
       - name: Generate release tag
         id: tag
@@ -92,7 +82,7 @@ jobs:
         with:
           tag_name: ${{steps.tag.outputs.release_tag}}
           body: "builded applications"
-          files: ${{env.PACKAGE}}
+          files: ${{env.ALACRITTY}}
           
       - name: Remove old Releases
         uses: dev-drprasad/delete-older-releases@v0.1.0
